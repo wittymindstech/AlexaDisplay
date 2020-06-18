@@ -1,29 +1,57 @@
-import speech_recognition as sr
-import re
+import speech_recognition as sr 
+from gtts import gTTS
 import os
-from gtts import gTTS 
-r = sr.Recognizer()
-mytext = 'Ok Playing Happy Birthday Song!'
+import re
+mytext = 'Ok Sir, Alisha aapke liye play kar rahi hai ye song! Jai Hind'
+
 language = 'en'
-myobj = gTTS(text=mytext, lang=language, slow=False) 
+myobj = gTTS(text=mytext, lang=language, slow=False)
 myobj.save("welcome.mp3")
-with sr.Microphone() as source:
-     print ("Say Something");
-     audio = r.listen(source)
-     print ("Time Over")
 
-try:
-    print ("TEXT:"+r.recognize_google(audio,language ='US-EN'));
-    voiceCmd=r.recognize_google(audio,language ='US-EN');
-    print("voiceCmd is",voiceCmd);
-    if ( re.match("wish happy birthday",voiceCmd)):
-        os.system("play welcome.mp3") 
-        os.system("play happy.mp3")
-    elif (re.match("shut",voiceCmd)):
-        os.system("reboot now")
 
-    else:
-        print("Command not understood");
-
-except:
-    pass;
+#enter the name of usb microphone that you found 
+#using lsusb 
+#the following name is only used as an example 
+mic_name = "USB PnP Sound Device: Audio (hw:2,0)"
+#Sample rate is how often values are recorded 
+sample_rate = 48000
+#Chunk is like a buffer. It stores 2048 samples (bytes of data) 
+#here.  
+#it is advisable to use powers of 2 such as 1024 or 2048 
+chunk_size = 2048
+#Initialize the recognizer 
+r = sr.Recognizer() 
+  
+#generate a list of all audio cards/microphones 
+mic_list = sr.Microphone.list_microphone_names() 
+  
+#the following loop aims to set the device ID of the mic that 
+#we specifically want to use to avoid ambiguity. 
+for i, microphone_name in enumerate(mic_list): 
+    if microphone_name == mic_name: 
+        device_id = i 
+  
+#use the microphone as source for input. Here, we also specify  
+#which device ID to specifically look for incase the microphone  
+#is not working, an error will pop up saying "device_id undefined" 
+with sr.Microphone(device_index = device_id, sample_rate = sample_rate,  
+                        chunk_size = chunk_size) as source: 
+    #wait for a second to let the recognizer adjust the  
+    #energy threshold based on the surrounding noise level 
+    r.adjust_for_ambient_noise(source) 
+    print ("Say Something")
+    #listens for the user's input 
+    audio = r.listen(source) 
+          
+    try: 
+        text = r.recognize_google(audio) 
+        print ("your music demand is: " + text )
+        os.system("omxplayer -o alsa welcome.mp3")
+        os.system("vlc --fullscreen jaggjitteya.mp4")
+    #error occurs when google could not understand what was said 
+      
+    except sr.UnknownValueError: 
+        print("Google Speech Recognition could not understand audio") 
+      
+    except sr.RequestError as e: 
+        print("Could not request results from Google   Speech Recognition service; {0}".format(e))
