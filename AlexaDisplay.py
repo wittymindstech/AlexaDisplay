@@ -46,9 +46,8 @@ with sr.Microphone(device_index = device_id, sample_rate = sample_rate,
     try: 
         text = r.recognize_google(audio) 
         print ("your music demand is: " + text )
-        #use regex here and match your text with your music api and  process your action
-        #os.system("omxplayer -o alsa welcome.mp3")
-        #os.system("vlc --fullscreen test.mp4")
+        os.system("omxplayer -o alsa welcome.mp3")
+        os.system("vlc --fullscreen jaggjitteya.mp4")
     #error occurs when google could not understand what was said 
       
     except sr.UnknownValueError: 
