@@ -1,0 +1,5 @@
+SpeechRecognition
+beautifulsoup4
+pyowm
+wikipedia
+selenium
