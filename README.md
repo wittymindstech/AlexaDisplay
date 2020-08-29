@@ -5,5 +5,9 @@ Dependencies
 `pip install SpeechRecognition`
 
 
+![](agritech.png)
+
+
+
 
 
