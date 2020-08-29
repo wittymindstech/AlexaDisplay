@@ -5,7 +5,7 @@ Dependencies
 `pip install SpeechRecognition`
 
 
-![](agritech.png)
+![](alexa.png)
 
 
 
